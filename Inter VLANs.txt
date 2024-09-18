@@ -1,0 +1,100 @@
+
+----------Herencia enrutamiento----------------
+
+Router
+
+interface gigabitethernet 0/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+
+interface g0/1
+ip address 192.168.3.1 255.255.255.0
+no shutdown
+
+-----------Router on a stick--------------------
+
+Switch 1 - Router o a stick
+
+enable 
+configure terminal
+vlan 2
+name AsambleaSV
+vlan 3
+name Presidencia
+interface range fa0/1-10
+switchport mode access
+switchport access vlan 2
+interface range fa0/11-20
+switchport mode access
+switchport access vlan 3
+interface range fa0/23-24
+switchport mode trunk
+switchport trunk allowed vlan 2,3
+
+Switch 2 - Router on a stick
+
+enable 
+configure terminal
+vlan 2
+name AsambleaSV
+vlan 3
+name Presidencia
+interface range fa0/1-10
+switchport mode access
+switchport access vlan 2
+interface range fa0/11-20
+switchport mode access
+switchport access vlan 3
+interface fa0/24
+switchport mode trunk
+switchport trunk allowed vlan 2,3
+
+
+router - router on a stick
+enable
+configure terminal
+interface g0/0
+no shutdown
+interface g0/0.2
+encapsulation dot1q2
+ip address 192.168.2.1 255.255.255.0
+interface g0/0.3
+encapsulation dot1q 3
+ip address 192.168.3.1 255.255.255.0
+
+
+---------------Switch layer 3-------------------
+
+enable
+configure terminal
+vlan 2
+name AsambleaSV
+vlan 3
+name Presidencia
+interface range fa0/1-10
+switchport mode access
+switchport access vlan 2
+interface range fa0/11-20
+switchport mode access
+switchport access vlan 3
+
+Crear SVI
+
+interface vlan 2
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+interface vlan 3
+ip address 192.168.3.1 255.255.255.0
+ip routing
+
+Router en SVI
+
+router eigrp 100
+network 192.168.2.0 255.255.255.0
+network 192.168.3.0 255.255.255.0
+network 10.0.0.0
+
+Router en SVI
+
+router eigrp 100
+network 10.0.0.0
